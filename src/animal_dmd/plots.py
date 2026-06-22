@@ -524,8 +524,20 @@ def animate_hawk_svd_mode(
 
 
 def plot_unit_circle_eigenvalues(per_step_eigenvalues: np.ndarray):
-    """Plot DMD eigenvalues on the discrete-time unit circle."""
-    values = np.asarray(per_step_eigenvalues)
+    """Plot DMD eigenvalues on the discrete-time unit circle.
+
+    Maths
+    -----
+    Each point is a discrete-time DMD eigenvalue lambda (per step). Its modulus
+    sets growth/decay and its angle sets frequency:
+
+        |lambda| < 1 decays, = 1 is neutral (on the unit circle), > 1 grows,
+        angle(lambda) = 2*pi*f*dt.
+
+    The continuous rate is omega = log(lambda)/dt: growth = Re(omega),
+    frequency f = Im(omega)/(2*pi).
+    """
+    values = np.asarray(per_step_eigenvalues, dtype=np.complex128)
     fig, ax = plt.subplots(1, 2, figsize=(9, 4.2))
     theta = np.linspace(0, 2 * np.pi, 400)
     radii = np.abs(values)

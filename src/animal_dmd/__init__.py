@@ -16,7 +16,7 @@ except ModuleNotFoundError as exc:
     if exc.name != "birddmd":
         raise
 
-    def reconstruct_known_pairs(*args, **kwargs):
+    def reconstruct_known_pairs(dmd_result, known_frequencies_hz: dict[str, float]) -> tuple:  # noqa: ARG001 - signature mirrors real impl; stub only raises
         raise ModuleNotFoundError(
             "reconstruct_known_pairs requires BirdDMD. Install the workshop dependencies first."
         ) from exc
@@ -40,6 +40,7 @@ from .plots import (
     plot_trace_fft_comparison,
     plot_toy_svd_component_shapes,
     plot_unit_circle_eigenvalues,
+    plot_upsampling_comparison,
     print_dmd_summary,
 )
 from .setup import setup_workshop
@@ -72,6 +73,7 @@ __all__ = [
     "plot_trace_fft_comparison",
     "plot_toy_svd_component_shapes",
     "plot_unit_circle_eigenvalues",
+    "plot_upsampling_comparison",
     "print_dmd_summary",
     "prepare_analysis_motion",
     "prepare_custom_motion",
