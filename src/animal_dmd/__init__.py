@@ -1,5 +1,12 @@
 """Comparative DMD analysis across animal species."""
 
+# Silence pydmd's docstring SyntaxWarnings (invalid escape sequences in unraw
+# :math: strings). They fire on first compile when birddmd imports pydmd and
+# only alarm workshop attendees; the filter must precede any such import.
+import warnings
+
+warnings.filterwarnings("ignore", message="invalid escape sequence", category=SyntaxWarning)
+
 from .custom import (
     CustomSkeleton,
     PreparedCustomMotion,
