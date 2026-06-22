@@ -22,6 +22,7 @@ def setup_workshop(branch: str | None = None) -> Path:
     root = Path("/content/dmd-workshop") if "google.colab" in sys.modules else Path(__file__).resolve().parents[2]
     notebooks = root / "notebooks"
     data_dir = root / "data" / "hawk"
+    spider_dir = root / "data" / "spider"
 
     if "google.colab" in sys.modules and not root.exists():
         print("Downloading workshop files...")
@@ -30,6 +31,8 @@ def setup_workshop(branch: str | None = None) -> Path:
     required_files = [
         data_dir / "mean_hawk_shape.csv",
         data_dir / "processed" / "toothless_flapping_9m_avg.npz",
+        spider_dir / "mean_spider_shape_carolina.csv",
+        spider_dir / "spider_walking.npz",
         notebooks / "00_build_your_own_animal.ipynb",
         notebooks / "01_intro_dmd.ipynb",
         notebooks / "02_bird_flight_dmd.ipynb",
@@ -41,6 +44,7 @@ def setup_workshop(branch: str | None = None) -> Path:
         raise FileNotFoundError(f"Workshop setup is incomplete:\n{missing_list}")
 
     os.environ["ANIMAL_DMD_DATA_DIR"] = str(data_dir)
+    os.environ["ANIMAL_DMD_SPIDER_DIR"] = str(spider_dir)
     if str(root / "src") not in sys.path:
         sys.path.insert(0, str(root / "src"))
 
