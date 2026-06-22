@@ -53,7 +53,15 @@ def prepare_custom_motion(
     marker_names: list[str] | None = None,
     print_summary: bool = True,
 ) -> PreparedCustomMotion:
-    """Validate custom motion inputs and prepare the arrays used for DMD."""
+    """Validate custom motion inputs and prepare the arrays used for DMD.
+
+    Maths
+    -----
+    Markers are centred by subtracting the mean pose, then flattened into the
+    snapshot/data matrix X of shape (features, frames), features = markers *
+    dims. Column t of X is the pose at frame t -- the standard input that both
+    SVD (X = U S V^T) and DMD (x_{t+1} = A x_t) operate on.
+    """
     motion = np.asarray(motion, dtype=float)
     times = np.asarray(times, dtype=float)
 

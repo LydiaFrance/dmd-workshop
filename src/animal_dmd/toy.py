@@ -42,6 +42,17 @@ def make_toy_motion(
 
     The notebook owns the temporal functions because those are the lesson.
     This helper only hides the uninteresting marker bookkeeping.
+
+    Maths
+    -----
+    Each marker coordinate is the mean shape plus a sum of scaled time
+    functions,
+
+        p_m(t) = p_mean_m + sum_j  a_{m,j} * w_j(t),
+
+    so the motion is linear in the waveforms w_j(t) (steady, shared, decaying).
+    This linear-superposition structure is exactly what SVD and DMD later
+    recover.
     """
     waves = [
         np.asarray(steady_wave, dtype=float),

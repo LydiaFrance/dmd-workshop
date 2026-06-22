@@ -58,7 +58,11 @@ def style_toy_axis(ax, title: str) -> None:
 
 
 def phase_frames(frequency_hz: float, dt: float, phases=(0.0, 0.25, 0.5)) -> list[int]:
-    """Frame indices at matched phase fractions of an oscillator cycle."""
+    """Frame indices at matched phase fractions of an oscillator cycle.
+
+    Maths: one cycle of an f Hz oscillator spans 1/(f*dt) frames, so phase
+    fraction p (of a full 2*pi cycle) lands on frame round(p / (f*dt)).
+    """
     period_frames = 1.0 / (frequency_hz * dt)
     return [int(round(phase * period_frames)) for phase in phases]
 
@@ -255,7 +259,12 @@ def plot_trace_fft_comparison(
     *,
     true_frequencies: dict[str, tuple[float, str]],
 ):
-    """Show how FFT results change with the chosen marker trace."""
+    """Show how FFT results change with the chosen marker trace.
+
+    Maths: each spectrum is the FFT power |X(f)|^2. Which peak dominates depends
+    on the trace, since every coordinate carries the underlying modes in
+    different proportions.
+    """
     fig, axes = plt.subplots(len(trace_power), 1, figsize=(8, 2 * len(trace_power)), sharex=True, sharey=True)
     axes = np.atleast_1d(axes)
 
@@ -286,7 +295,14 @@ def plot_short_clip_fft_limit(
     short_duration_seconds: float,
     marked_frequencies: dict[str, tuple[float, str]],
 ):
-    """Compare FFT resolution for a full clip and a short clip."""
+    """Compare FFT resolution for a full clip and a short clip.
+
+    Maths
+    -----
+    FFT frequency resolution (bin spacing) is Delta_f = 1/T = fs/N for a clip of
+    duration T = N*dt. A shorter clip -> larger Delta_f -> coarser, more smeared
+    peaks. The highest resolvable frequency is the Nyquist limit fs/2.
+    """
     clips = {
         f"full {full_duration_seconds:g} s clip: bin spacing {1 / full_duration_seconds:.2f} Hz": (
             full_clip_fft[0],
@@ -318,6 +334,14 @@ def plot_short_clip_fft_limit(
 
 
 def plot_svd_summary(times, explained, scores, *, n_bars: int = 8, n_scores: int = 4, title: str):
+    """Bar chart of variance explained plus the leading SVD time scores.
+
+    Maths
+    -----
+    For the snapshot matrix X = U S V^T (SVD), bar i is the variance explained,
+    ``explained[i]`` = sigma_i^2 / sum_j sigma_j^2, and each time score is
+    component i's amplitude over time, row i of S V^T.
+    """
     fig, ax = plt.subplots(1, 2, figsize=(10, 3))
     n_coloured = min(n_scores, len(SVD_COMPONENT_COLOURS), n_bars)
     bar_colours = [
@@ -359,7 +383,17 @@ def _svd_component_shapes(
     n_components: int,
     score_scale: float = 2.0,
 ):
-    """Return mean +/- each SVD component in marker-space coordinates."""
+    """Return mean +/- each SVD component in marker-space coordinates.
+
+    Maths
+    -----
+    With the snapshot SVD X = U S V^T, column u_i of U is a spatial pattern and
+    score_i(t) = sigma_i * V[:, i] its time amplitude. Each shape returned is
+
+        mean +/- (score_scale * std(score_i)) * u_i,
+
+    the mean pose pushed +/- a few standard deviations along component i.
+    """
     base_shape = np.asarray(mean_shape)
     if base_shape.ndim == 3:
         base_shape = base_shape[0]
@@ -600,9 +634,57 @@ def plot_hawk_wingtip_trace_comparison(
     ax.set_xlabel("Time (s)")
     ax.set_ylabel(ylabel)
     ax.set_title(title)
-    ax.legend()
+    ax.legend(loc="upper left", bbox_to_anchor=(1.01, 1.0),
+              borderaxespad=0.0, fontsize="small")
     plt.tight_layout()
     return fig, ax
+
+
+def plot_upsampling_comparison(
+    reconstruction_times: np.ndarray,
+    original_values: np.ndarray,
+    reconstruction_values: np.ndarray,
+    upsampled_times: np.ndarray,
+    upsampled_values: np.ndarray,
+    *,
+    title: str,
+    ylabel: str = "Wingtip z (m)",
+):
+    """Two stacked rows: original vs DMD reconstruction, then original vs upsampled points.
+
+    Splitting the comparison over two rows keeps the crimson reconstruction line
+    visible (the dense upsampled points otherwise bury it) and the legends sit
+    outside the axes so they never cover the traces.
+
+    Maths: because the DMD model x(t) = sum_k phi_k exp(omega_k t) b_k is
+    continuous in t, it can be evaluated on a finer grid than the recorded
+    frames -- the upsampling is interpolation *by the fitted dynamics*, not
+    resampling of the samples.
+    """
+    fig, axes = plt.subplots(2, 1, figsize=(10, 5), sharex=True, sharey=True)
+
+    # Row 1: original samples and the DMD reconstruction line.
+    axes[0].plot(reconstruction_times, original_values, "o", color="black",
+                 markersize=4, linestyle="None", label="Original samples")
+    axes[0].plot(reconstruction_times, reconstruction_values, color="crimson",
+                 linewidth=1.5, label="DMD reconstruction")
+    axes[0].set_title(title)
+
+    # Row 2: original samples and the denser upsampled points.
+    axes[1].plot(reconstruction_times, original_values, "o", color="black",
+                 markersize=4, linestyle="None", label="Original samples")
+    axes[1].plot(upsampled_times, upsampled_values, ".", color="royalblue",
+                 markersize=2, alpha=0.6,
+                 label=f"Upsampled ({len(upsampled_times)} frames)")
+    axes[1].set_xlabel("Time (s)")
+
+    for ax in axes:
+        ax.set_ylabel(ylabel)
+        ax.legend(loc="upper left", bbox_to_anchor=(1.01, 1.0),
+                  borderaxespad=0.0, fontsize="small")
+
+    plt.tight_layout()
+    return fig, axes
 
 
 def print_dmd_summary(
@@ -612,6 +694,12 @@ def print_dmd_summary(
     *,
     label: str = "reconstruction",
 ) -> None:
+    """Print per-mode growth/frequency and the reconstruction error.
+
+    Maths: per mode the eigenvalue gives omega = log(lambda)/dt, so growth =
+    Re(omega) (per s) and f = Im(omega)/(2*pi) (Hz); RMSE = sqrt(mean((x -
+    x_reconstructed)^2)).
+    """
     for i, (growth, frequency) in enumerate(zip(growth_per_s, frequency_hz, strict=True)):
         print(
             f"mode {i}: growth={growth:7.3f} per s, "
