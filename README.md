@@ -13,20 +13,13 @@ plots and complex modes appear in the real animal data.
 
 ## Start here
 
-| Path | Notebook | Use it for |
-|------|----------|------------|
-| Main route | [01 Intro DMD](notebooks/01_intro_dmd.ipynb) | A toy animal with three known motions: steady, shared, and decaying. |
-| Main route | [02 Bird Flight DMD](notebooks/02_bird_flight_dmd.ipynb) | The same PCA/SVD -> FFT -> DMD workflow on public hawk keypoints. |
-| Optional | [00 Build Your Own Animal](notebooks/00_build_your_own_animal.ipynb) | A separate setup notebook if you brought your own keypoint data. |
-| Optional | [03 Custom DMD](notebooks/03_custom_dmd.ipynb) | A higher-confidence template for running DMD on your own non-hawk data. |
-
-[![Open intro DMD in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LydiaFrance/dmd-workshop/blob/main/notebooks/01_intro_dmd.ipynb)
-
-[![Open bird flight DMD in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LydiaFrance/dmd-workshop/blob/main/notebooks/02_bird_flight_dmd.ipynb)
-
-[![Open custom animal setup in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LydiaFrance/dmd-workshop/blob/main/notebooks/00_build_your_own_animal.ipynb)
-
-[![Open custom DMD in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LydiaFrance/dmd-workshop/blob/main/notebooks/03_custom_dmd.ipynb)
+| Path | Notebook | Open | Use it for |
+|------|----------|------|------------|
+| Main route | [01 Intro DMD](notebooks/01_intro_dmd.ipynb) | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LydiaFrance/dmd-workshop/blob/main/notebooks/01_intro_dmd.ipynb) | A toy animal with three known motions: steady, shared, and decaying. |
+| Main route | [02 Bird Flight DMD](notebooks/02_bird_flight_dmd.ipynb) | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LydiaFrance/dmd-workshop/blob/main/notebooks/02_bird_flight_dmd.ipynb) | The same PCA/SVD -> FFT -> DMD workflow on public hawk keypoints. |
+| Optional | [00 Build Your Own Animal](notebooks/00_build_your_own_animal.ipynb) | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LydiaFrance/dmd-workshop/blob/main/notebooks/00_build_your_own_animal.ipynb) | A separate setup notebook if you brought your own keypoint data. |
+| Optional | [03 Custom DMD](notebooks/03_custom_dmd.ipynb) | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LydiaFrance/dmd-workshop/blob/main/notebooks/03_custom_dmd.ipynb) | A higher-confidence template for running DMD on your own non-hawk data. |
+| Optional | [05 Spider Walking DMD](notebooks/05_spider_walking_dmd.ipynb) | [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/LydiaFrance/dmd-workshop/blob/main/notebooks/05_spider_walking_dmd.ipynb) | The same DMD workflow on a walking spider: a many-legged, non-flying animal. |
 
 No local installation is needed for the workshop route. Colab installs the small
 Python dependencies inside the notebook runtime.
