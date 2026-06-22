@@ -345,7 +345,7 @@ def plot_svd_summary(times, explained, scores, *, n_bars: int = 8, n_scores: int
         )
     ax[1].set_xlabel("Time (s)")
     ax[1].set_title("PCA/SVD time scores")
-    ax[1].legend(ncol=2)
+    ax[1].legend(fontsize="x-small", ncol=2, loc="upper center", bbox_to_anchor=(0.5, -0.22), frameon=False)
     plt.tight_layout()
     return fig, ax
 
