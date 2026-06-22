@@ -16,6 +16,33 @@ def _run(command: list[str]) -> None:
     subprocess.run(command, check=True)
 
 
+def configure_notebook() -> None:
+    """Set Colab-friendly plot rendering and tidy NumPy printing.
+
+    Keeps notebook import cells short: this hides the plotly renderer, inline
+    figure format, and print-option plumbing behind one call.
+    """
+    import numpy as np
+
+    np.set_printoptions(precision=3, suppress=True)
+
+    try:
+        import plotly.io as pio
+
+        pio.renderers.default = "colab" if "google.colab" in sys.modules else "notebook_connected"
+    except Exception:
+        pass
+
+    try:
+        # Crisp static figures inline: all workshop plots are line/bar (no raster),
+        # so svg is sharpest. Animations (jshtml) and Plotly are unaffected.
+        from matplotlib_inline.backend_inline import set_matplotlib_formats
+
+        set_matplotlib_formats("svg")
+    except Exception:
+        pass
+
+
 def setup_workshop(branch: str | None = None) -> Path:
     """Prepare workshop files and data, returning the notebook directory."""
     branch = branch or os.environ.get("ANIMAL_DMD_BRANCH", DEFAULT_BRANCH)
@@ -48,21 +75,7 @@ def setup_workshop(branch: str | None = None) -> Path:
     if str(root / "src") not in sys.path:
         sys.path.insert(0, str(root / "src"))
 
-    try:
-        import plotly.io as pio
-
-        pio.renderers.default = "colab" if "google.colab" in sys.modules else "notebook_connected"
-    except Exception:
-        pass
-
-    try:
-        # Crisp static figures inline: all workshop plots are line/bar (no raster),
-        # so svg is sharpest. Animations (jshtml) and Plotly are unaffected.
-        from matplotlib_inline.backend_inline import set_matplotlib_formats
-
-        set_matplotlib_formats("svg")
-    except Exception:
-        pass
+    configure_notebook()
 
     os.chdir(notebooks)
     print("Ready. Workshop files are loaded.")

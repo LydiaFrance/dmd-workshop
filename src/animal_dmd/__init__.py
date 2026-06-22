@@ -8,13 +8,17 @@ import warnings
 warnings.filterwarnings("ignore", message="invalid escape sequence", category=SyntaxWarning)
 
 from .custom import (
+    AnimalBundle,
     CustomSkeleton,
     PreparedCustomMotion,
+    default_animal_bundle_path,
     default_custom_skeleton_path,
     expand_analysis_motion,
+    load_animal_bundle,
     load_custom_skeleton,
     prepare_analysis_motion,
     prepare_custom_motion,
+    save_animal_bundle,
 )
 from .data import load_hawk_motion, load_spider_motion
 try:
@@ -50,18 +54,23 @@ from .plots import (
     plot_upsampling_comparison,
     print_dmd_summary,
 )
-from .setup import setup_workshop
+from .setup import configure_notebook, setup_workshop
 from .toy import TOY_MARKER_NAMES, make_toy_motion
 
 __all__ = [
+    "AnimalBundle",
     "PreparedCustomMotion",
     "CustomSkeleton",
     "TOY_MARKER_NAMES",
     "animate_hawk_svd_mode",
+    "configure_notebook",
     "draw_toy_shape",
+    "default_animal_bundle_path",
     "default_custom_skeleton_path",
     "expand_analysis_motion",
     "hold_last_frame",
+    "load_animal_bundle",
+    "save_animal_bundle",
     "load_hawk_motion",
     "load_spider_motion",
     "load_custom_skeleton",

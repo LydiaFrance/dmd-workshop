@@ -46,6 +46,16 @@ class CustomSkeleton:
     analysis_marker_names: list[str]
 
 
+@dataclass(frozen=True)
+class AnimalBundle:
+    """Everything notebook 03 needs from notebook 00, restored from one .npz."""
+
+    motion: np.ndarray
+    times: np.ndarray
+    marker_names: list[str]
+    skeleton_path: Path
+
+
 def prepare_custom_motion(
     motion,
     times,
@@ -121,6 +131,117 @@ def prepare_custom_motion(
 def default_custom_skeleton_path() -> Path:
     """Return where notebook 00 saves the custom skeleton by default."""
     return Path("/content/custom_skeleton.json") if "google.colab" in sys.modules else Path("custom_skeleton.json")
+
+
+def default_animal_bundle_path(name: str = "my_animal") -> Path:
+    """Return where notebook 00 writes the handover bundle by default."""
+    filename = name if name.endswith(".npz") else f"{name}.npz"
+    return Path("/content") / filename if "google.colab" in sys.modules else Path(filename)
+
+
+def _resolve_colab_files(files):
+    """Return the Colab ``files`` module, or None when running locally."""
+    if files is not None:
+        return files
+    try:
+        from google.colab import files as colab_files
+    except ImportError:
+        return None
+    return colab_files
+
+
+def save_animal_bundle(
+    name: str = "my_animal",
+    *,
+    motion,
+    times,
+    marker_names: list[str],
+    skel,
+    body_sections: dict,
+    marker_pairs,
+    centre_markers,
+    download: bool = True,
+    files=None,
+) -> Path:
+    """Pack motion, times, marker names and skeleton into one handover .npz.
+
+    This is the single file an attendee carries from notebook 00 to notebook
+    03. The skeleton definition is embedded as JSON inside the archive so the
+    bundle is self-contained: no separate ``custom_skeleton.json`` to track.
+    In Colab the file is also downloaded so it survives the runtime reset
+    between notebooks.
+    """
+    motion = np.asarray(motion, dtype=float)
+    times = np.asarray(times, dtype=float)
+    marker_names = list(marker_names)
+
+    if motion.ndim != 3:
+        raise ValueError("`motion` must have shape (frames, markers, dimensions).")
+    if len(marker_names) != motion.shape[1]:
+        raise ValueError("`marker_names` must have one name per marker in `motion`.")
+    if times.shape != (motion.shape[0],):
+        raise ValueError("`times` must have one value per frame in `motion`.")
+
+    skeleton_config = {
+        "name": skel.name,
+        "marker_names": marker_names,
+        "body_sections": body_sections,
+        "analysis_exclude": sorted(skel.analysis_exclude),
+        "marker_pairs": [list(pair) for pair in marker_pairs],
+        "centre_markers": list(centre_markers),
+    }
+
+    bundle_path = default_animal_bundle_path(name)
+    np.savez(
+        bundle_path,
+        motion=motion,
+        times=times,
+        skeleton_json=np.array(json.dumps(skeleton_config)),
+    )
+    print(f"Saved animal bundle to {bundle_path} ({motion.shape[0]} frames, {motion.shape[1]} markers)")
+
+    if download:
+        files = _resolve_colab_files(files)
+        if files is not None:
+            files.download(str(bundle_path))
+
+    return bundle_path
+
+
+def load_animal_bundle(path=None, *, files=None) -> AnimalBundle:
+    """Restore the notebook-00 handover bundle, prompting an upload in Colab.
+
+    Returns the motion, times and marker names plus a ``skeleton_path`` that
+    points at the skeleton JSON extracted from the bundle, ready to feed
+    :func:`load_custom_skeleton`.
+    """
+    files = _resolve_colab_files(files)
+    bundle_path = Path(path) if path is not None else default_animal_bundle_path()
+
+    if not bundle_path.exists() and files is not None:
+        print(f"Could not find {bundle_path}. Upload the my_animal.npz bundle saved by notebook 00.")
+        uploaded = files.upload()
+        if uploaded:
+            uploaded_name, uploaded_content = next(iter(uploaded.items()))
+            bundle_path = Path("/content") / uploaded_name if "google.colab" in sys.modules else Path(uploaded_name)
+            bundle_path.write_bytes(uploaded_content)
+
+    if not bundle_path.exists():
+        raise FileNotFoundError(
+            f"No bundle found at {bundle_path}. Export it from notebook 00 with save_animal_bundle()."
+        )
+
+    archive = np.load(bundle_path)
+    motion = archive["motion"]
+    times = archive["times"]
+    skeleton_config = json.loads(str(archive["skeleton_json"]))
+    marker_names = list(skeleton_config["marker_names"])
+
+    skeleton_path = default_custom_skeleton_path()
+    skeleton_path.write_text(json.dumps(skeleton_config, indent=2))
+
+    print(f"Loaded animal bundle from {bundle_path} ({motion.shape[0]} frames, {motion.shape[1]} markers)")
+    return AnimalBundle(motion=motion, times=times, marker_names=marker_names, skeleton_path=skeleton_path)
 
 
 def load_custom_skeleton(
