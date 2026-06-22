@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from itertools import cycle
+
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -180,8 +182,8 @@ def plot_reconstructed_pair_motions(
 
 def plot_marker_traces(times, traces: dict[str, np.ndarray], *, title: str, ylabel: str = "Coordinate value"):
     fig, ax = plt.subplots(figsize=(8, 3))
-    colours = list(MARKER_TRACE_COLOURS.values())
-    for colour, (label, signal) in zip(colours, traces.items(), strict=True):
+    colours = cycle(MARKER_TRACE_COLOURS.values())
+    for colour, (label, signal) in zip(colours, traces.items()):
         ax.plot(times, signal, color=colour, label=label)
     ax.set_xlabel("Time (s)")
     ax.set_ylabel(ylabel)
@@ -200,13 +202,12 @@ def plot_reconstruction_marker_traces(
 ):
     """Overlay measured marker traces and the full DMD reconstruction."""
     fig, ax = plt.subplots(figsize=(8, 3))
-    colours = list(MARKER_TRACE_COLOURS.values())
+    colours = cycle(MARKER_TRACE_COLOURS.values())
 
     for colour, (label, measured_signal), reconstructed_signal in zip(
         colours,
         measured_traces.items(),
         reconstructed_traces.values(),
-        strict=True,
     ):
         ax.plot(times, measured_signal, color=colour, linewidth=2, label=f"{label}: data")
         ax.plot(times, reconstructed_signal, color=colour, linestyle="--", linewidth=1.5, label=f"{label}: DMD")

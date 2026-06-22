@@ -9,7 +9,7 @@ from .custom import (
     prepare_analysis_motion,
     prepare_custom_motion,
 )
-from .data import load_hawk_motion
+from .data import load_hawk_motion, load_spider_motion
 try:
     from .dmd import reconstruct_known_pairs
 except ModuleNotFoundError as exc:
@@ -56,6 +56,7 @@ __all__ = [
     "expand_analysis_motion",
     "hold_last_frame",
     "load_hawk_motion",
+    "load_spider_motion",
     "load_custom_skeleton",
     "make_toy_motion",
     "phase_frames",
