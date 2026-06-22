@@ -1,0 +1,38 @@
+[project]
+name = "dmd-workshop"
+version = "0.1.0"
+description = "Dynamic Mode Decomposition workshop notebooks for animal motion"
+authors = [{ name = "Lydia France", email = "lydia.france@biology.ox.ac.uk" }]
+requires-python = ">=3.11"
+dependencies = [
+    "morphing-birds @ git+https://github.com/LydiaFrance/morphing_birds.git@custom-skeleton",
+    "birddmd @ git+https://github.com/LydiaFrance/BirdDMD.git@update/morphing-birds-v0.2",
+    "numpy",
+    "matplotlib",
+    "plotly",
+    "jupyter",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/animal_dmd"]
+
+[dependency-groups]
+dev = [
+    "ipykernel",
+]
+
+[tool.uv]
+override-dependencies = [
+    "morphing-birds @ git+https://github.com/LydiaFrance/morphing_birds@custom-skeleton",
+]
+
+[tool.uv.sources]
+morphing-birds = { git = "https://github.com/LydiaFrance/morphing_birds", branch = "custom-skeleton" }
+birddmd = { git = "https://github.com/LydiaFrance/BirdDMD", branch = "update/morphing-birds-v0.2" }
