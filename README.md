@@ -85,6 +85,9 @@ Included teaching files:
   dataset
 - `data/hawk/processed/toothless_control_9m_avg.npz` and
   `toothless_rightturn_obstacle_avg.npz` - small public comparison datasets
+- `data/spider/mean_spider_shape_carolina.csv` and `spider_walking.npz` - a
+  walking-spider example for notebook 05, courtesy of Heiko Kabutz and Kaushik
+  Jayaram (Imperial College London, formerly CU Boulder)
 
 Marker arrays are shaped `(n_frames, n_markers, 3)` and use backpack-relative
 coordinates in metres. See [data/hawk/README.md](data/hawk/README.md) for the
@@ -97,6 +100,19 @@ This workshop is adapted from my longer
 BirdDMD contains the manuscript analysis, API documentation, and more advanced
 notebooks on reconstruction accuracy, doubled-frequency modes, full-flight
 transitions, and generative forecasts.
+
+## References
+
+- DMD preprint: <https://arxiv.org/abs/2602.19196>
+- Kinematic morphospaces paper:
+  [doi:10.1093/icb/icag058](https://doi.org/10.1093/icb/icag058)
+
+## Acknowledgements
+
+With thanks to J. Nathan Kutz (University of Washington), Karl Lapo (University
+of Innsbruck), and Graham Taylor (University of Oxford). The walking-spider data
+is shared courtesy of Heiko Kabutz (CU Boulder) and Kaushik Jayaram (Imperial
+College London, formerly CU Boulder).
 
 ## Data scope
 
