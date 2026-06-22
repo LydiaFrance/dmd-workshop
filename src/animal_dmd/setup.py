@@ -51,6 +51,15 @@ def setup_workshop(branch: str | None = None) -> Path:
     except Exception:
         pass
 
+    try:
+        # Crisp static figures inline: all workshop plots are line/bar (no raster),
+        # so svg is sharpest. Animations (jshtml) and Plotly are unaffected.
+        from matplotlib_inline.backend_inline import set_matplotlib_formats
+
+        set_matplotlib_formats("svg")
+    except Exception:
+        pass
+
     os.chdir(notebooks)
     print("Ready. Workshop files are loaded.")
     return notebooks
