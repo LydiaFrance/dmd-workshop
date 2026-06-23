@@ -60,10 +60,10 @@ def setup_workshop(branch: str | None = None) -> Path:
         data_dir / "processed" / "toothless_flapping_9m_avg.npz",
         spider_dir / "mean_spider_shape_carolina.csv",
         spider_dir / "spider_walking.npz",
-        notebooks / "00_build_your_own_animal.ipynb",
         notebooks / "01_intro_dmd.ipynb",
         notebooks / "02_bird_flight_dmd.ipynb",
-        notebooks / "03_custom_dmd.ipynb",
+        notebooks / "03_build_your_own_animal.ipynb",
+        notebooks / "04_custom_dmd.ipynb",
     ]
     missing = [path for path in required_files if not path.exists()]
     if missing:
