@@ -707,3 +707,28 @@ def print_dmd_summary(
             f"frequency={frequency:7.2f} Hz"
         )
     print(f"{label} RMSE: {reconstruction_rmse:.6f}")
+
+
+def plot_mode_pair_dynamics(times, mode_dynamics: dict[str, np.ndarray], *, title: str):
+    """Stack each conjugate pair's own temporal dynamic, one panel per pair.
+
+    Pure rendering: the caller passes precomputed waves keyed by a label that
+    already states the frequency and growth/decay. Each wave is the mode's own
+    rhythm in time (e.g. e^{sigma t} cos(omega t)), independent of any marker.
+    """
+    n_pairs = len(mode_dynamics)
+    fig, axes = plt.subplots(
+        n_pairs, 1, figsize=(7, 1.9 * n_pairs), sharex=True, squeeze=False
+    )
+    axes = axes[:, 0]
+
+    for ax, (label, wave) in zip(axes, mode_dynamics.items()):
+        ax.plot(times, wave, color="#3b3b8f", linewidth=1.8)
+        ax.axhline(0.0, color="grey", linewidth=0.6)
+        ax.set_ylabel("mode amplitude")
+        ax.set_title(label, fontsize=10)
+
+    axes[-1].set_xlabel("Time (s)")
+    fig.suptitle(title)
+    plt.tight_layout()
+    return fig, axes
