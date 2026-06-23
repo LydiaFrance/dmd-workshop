@@ -7,6 +7,9 @@ We start with a tiny synthetic example, then repeat the same workflow on hawk
 flight. The aim is to make the DMD vocabulary concrete before the eigenvalue
 plots and complex modes appear in the real animal data.
 
+> **📺 Live session** — join the screen share here:
+> **<https://teams.microsoft.com/meet/381525480258834?p=XpKHN4MWPfiArRaAub>**
+
 <p align="center">
   <img src="https://raw.githubusercontent.com/LydiaFrance/BirdDMD/main/notebooks/figures/DMD_figure1.png" width="720" alt="DMD summary figure for hawk flapping modes">
 </p>
@@ -108,6 +111,19 @@ BirdDMD contains the manuscript analysis, API documentation, and more advanced
 notebooks on reconstruction accuracy, doubled-frequency modes, full-flight
 transitions, and generative forecasts.
 
+For a fuller exploration of bird flight DMD, see the **preprint website**:
+**<https://lydiafrance.github.io/BirdDMD/>**. Its
+[notebook gallery](https://lydiafrance.github.io/BirdDMD/notebooks/index.html)
+renders the manuscript analyses (with saved outputs, no setup needed):
+
+- **00 Introduction** — DMD theory and the hawk dataset
+- **01 Flapping Modes** — decomposing flapping into modes
+- **03 Double Frequency** — the doubled-frequency (2ω) mode
+- **04 Full Flight** — flapping-to-gliding transitions
+- **05 Turning** — obstacle avoidance and turning manoeuvres
+- **06 Reconstruction Accuracy** — batch RMSE validation
+- **07 Generative Model** — forecasting and synthetic flight
+
 ## References
 
 - DMD preprint: <https://arxiv.org/abs/2602.19196>
@@ -124,4 +140,5 @@ College London, formerly CU Boulder).
 ## Data scope
 
 This is a compact teaching package. It contains the notebooks and small hawk
-data files needed for the workshop route above.
+and spider data files needed for the workshop route above (the spider walking
+example powers notebook 05).
