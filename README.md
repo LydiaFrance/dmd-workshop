@@ -76,6 +76,13 @@ during the main workshop. Use it if you have your own data shaped like:
 It helps you define marker names, body sections, left/right pairs, display-only
 markers, and a first animation before trying DMD.
 
+### 4. Spider Walking DMD (optional)
+
+An optional extra notebook that runs the same DMD workflow on a walking spider:
+a many-legged, non-flying animal. Use it to see how the method generalises
+beyond bird flight. It needs no setup of your own data — the example is
+included.
+
 ## Data
 
 Included teaching files:
